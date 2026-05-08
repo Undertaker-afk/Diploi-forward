@@ -147,7 +147,7 @@ function sanitizeGitRef(ref) {
   }
 
   const trimmedRef = ref.trim();
-  const isValidPattern = /^[A-Za-z0-9._/-]+$/.test(trimmedRef);
+  const isValidPattern = /^([A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+$/.test(trimmedRef);
   const hasTraversal = trimmedRef.includes('..');
 
   if (!trimmedRef || trimmedRef.startsWith('/') || trimmedRef.endsWith('/') || hasTraversal || !isValidPattern) {
@@ -168,10 +168,7 @@ async function discoverDiploiConfig(repoInput, explicitRef) {
 
   for (const ref of refsToTry) {
     for (const configPath of pathsToTry) {
-      const encodedRef = ref
-        .split('/')
-        .map((segment) => encodeURIComponent(segment))
-        .join('/');
+      const encodedRef = encodeURIComponent(ref).replace(/%2F/g, '/');
       const rawUrl = `https://raw.githubusercontent.com/${parsed.owner}/${parsed.repo}/${encodedRef}/${configPath}`;
       const response = await fetch(rawUrl);
       if (!response.ok) {
