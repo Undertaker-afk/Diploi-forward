@@ -64,7 +64,8 @@ curl -X POST http://localhost:3000/configure/repo \
 
 Request fields:
 
-- `repo` (or `githubRepo`): `owner/repo` or `https://github.com/owner/repo`
+- `repo` (preferred): `owner/repo` or `https://github.com/owner/repo`
+- `githubRepo` (legacy alias): same format as `repo`
 - `ref` (optional): branch/tag/sha. Defaults to trying `main`, then `master`.
 
 The endpoint reads one of:

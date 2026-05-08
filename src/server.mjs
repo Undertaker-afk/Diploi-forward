@@ -71,7 +71,7 @@ function parseRepoIdentifier(input) {
 
   const trimmed = input.trim();
 
-  const shortMatch = trimmed.match(/^([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)$/);
+  const shortMatch = trimmed.match(/^([A-Za-z0-9][A-Za-z0-9_.-]*)\/([A-Za-z0-9][A-Za-z0-9_.-]*)$/);
   if (shortMatch) {
     const owner = shortMatch[1];
     const repo = shortMatch[2].replace(/\.git$/, '');
@@ -155,7 +155,7 @@ function sanitizeGitRef(ref) {
   }
 
   const trimmedRef = ref.trim();
-  const isValidPattern = /^([A-Za-z0-9_.-]+\/)*[A-Za-z0-9_.-]+$/.test(trimmedRef);
+  const isValidPattern = /^([A-Za-z0-9][A-Za-z0-9_.-]*\/)*[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(trimmedRef);
   const hasTraversal = trimmedRef.includes('..');
 
   if (!trimmedRef || trimmedRef.startsWith('/') || trimmedRef.endsWith('/') || hasTraversal || !isValidPattern) {
@@ -311,7 +311,9 @@ const server = createServer(async (req, res) => {
     }
 
     for await (const chunk of upstreamResponse.body) {
-      res.write(chunk);
+      if (!res.write(chunk)) {
+        await new Promise((resolve) => res.once('drain', resolve));
+      }
     }
 
     res.end();
