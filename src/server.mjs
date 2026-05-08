@@ -75,7 +75,7 @@ function parseRepoIdentifier(input) {
   if (shortMatch) {
     const owner = shortMatch[1];
     const repo = shortMatch[2].replace(/\.git$/, '');
-    if (owner.startsWith('.') || repo.startsWith('.')) {
+    if (owner.startsWith('.') || repo.startsWith('.') || owner.endsWith('.') || repo.endsWith('.')) {
       return null;
     }
     return { owner, repo };
@@ -94,7 +94,7 @@ function parseRepoIdentifier(input) {
 
     const owner = parts[0];
     const repo = parts[1].replace(/\.git$/, '');
-    if (owner.startsWith('.') || repo.startsWith('.')) {
+    if (owner.startsWith('.') || repo.startsWith('.') || owner.endsWith('.') || repo.endsWith('.')) {
       return null;
     }
 
@@ -165,6 +165,10 @@ function sanitizeGitRef(ref) {
   return trimmedRef;
 }
 
+function encodeGitRef(ref) {
+  return ref.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+}
+
 async function discoverDiploiConfig(repoInput, explicitRef) {
   const parsed = parseRepoIdentifier(repoInput);
   if (!parsed) {
@@ -176,7 +180,7 @@ async function discoverDiploiConfig(repoInput, explicitRef) {
 
   for (const ref of refsToTry) {
     for (const configPath of pathsToTry) {
-      const encodedRef = ref.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+      const encodedRef = encodeGitRef(ref);
       const rawUrl = `https://raw.githubusercontent.com/${parsed.owner}/${parsed.repo}/${encodedRef}/${configPath}`;
       const response = await fetch(rawUrl);
       if (!response.ok) {
