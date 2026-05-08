@@ -1,0 +1,223 @@
+:root {
+    --bg-color: #121212;
+    --container-bg: #1e1e1e;
+    --header-bg: #252525;
+    --text-color: #e0e0e0;
+    --primary-color: #6650fa;
+    --secondary-color: #31363f;
+    --accent-color: #00e676;
+    --message-user: #3a3a3a;
+    --message-bot: #2a2a2a;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+header {
+    background-color: var(--header-bg);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo h1 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.api-info {
+    font-family: monospace;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.info-item {
+    background: var(--secondary-color);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.chat-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 1rem;
+    gap: 1rem;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.message {
+    max-width: 80%;
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.message.user {
+    align-self: flex-end;
+    background-color: var(--message-user);
+    border-bottom-right-radius: 2px;
+}
+
+.message.bot {
+    align-self: flex-start;
+    background-color: var(--message-bot);
+    border-bottom-left-radius: 2px;
+}
+
+.message.system {
+    align-self: center;
+    background: transparent;
+    font-style: italic;
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+.message img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+#model-select {
+    background: var(--secondary-color);
+    color: white;
+    border: 1px solid #444;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.chat-input {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--header-bg);
+    border-radius: 8px;
+}
+
+#message-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    resize: none;
+    outline: none;
+    font-size: 1rem;
+    max-height: 200px;
+}
+
+button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.btn-small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+#image-preview-container {
+    position: relative;
+    height: 40px;
+    width: 40px;
+}
+
+#image-preview {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+#remove-image {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    padding: 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 4px;
+}

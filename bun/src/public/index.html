@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diploi Free AI Proxy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <img src="https://diploi.com/logo-white.svg" alt="Diploi Logo" height="24">
+                <h1>AI Proxy</h1>
+            </div>
+            <div class="api-info">
+                <div class="info-item">
+                    <span id="api-base-display">Loading Base URL...</span>
+                </div>
+                <div class="info-item">
+                    <span id="api-key-display">Loading API Key...</span>
+                    <button id="copy-key" class="btn-small">Copy</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="chat-container">
+            <div id="chat-messages" class="chat-messages">
+                <div class="message system">
+                    Welcome! Select a model and start chatting. This proxy expires in 1 hour.
+                </div>
+            </div>
+
+            <div class="controls">
+                <select id="model-select">
+                    <!-- Populated by JS -->
+                </select>
+                <label for="image-upload" class="btn-secondary" id="image-label">
+                    📷 Upload Image
+                    <input type="file" id="image-upload" accept="image/*" style="display: none;">
+                </label>
+                <div id="image-preview-container" style="display: none;">
+                    <img id="image-preview" src="" alt="Preview">
+                    <button id="remove-image">✕</button>
+                </div>
+            </div>
+
+            <form id="chat-form" class="chat-input">
+                <textarea id="message-input" placeholder="Type your message..." rows="1" required></textarea>
+                <button type="submit" id="send-btn">Send</button>
+            </form>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
