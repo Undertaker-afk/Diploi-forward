@@ -7,6 +7,8 @@ This service exposes OpenAI-compatible and Anthropic-compatible API paths while 
 - `DIPLOI_AI_TOKEN`
 - `DIPLOI_AI_API_BASE_URL` (example: `http://core.diploi/ai-core-proxy/v1`)
 
+> `http://core.diploi/ai-core-proxy/v1` is an internal-example URL; replace it with your actual reachable Diploi AI proxy base URL.
+
 It also supports a repo bootstrap endpoint that reads `diploi.yaml` from a GitHub repository.
 
 ## Features

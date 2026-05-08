@@ -176,10 +176,7 @@ async function discoverDiploiConfig(repoInput, explicitRef) {
 
   for (const ref of refsToTry) {
     for (const configPath of pathsToTry) {
-      const encodedRef = ref
-        .split('/')
-        .map((segment) => encodeURIComponent(segment))
-        .join('/');
+      const encodedRef = ref.split('/').map((segment) => encodeURIComponent(segment)).join('/');
       const rawUrl = `https://raw.githubusercontent.com/${parsed.owner}/${parsed.repo}/${encodedRef}/${configPath}`;
       const response = await fetch(rawUrl);
       if (!response.ok) {
