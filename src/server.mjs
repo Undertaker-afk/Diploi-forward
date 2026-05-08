@@ -73,7 +73,12 @@ function parseRepoIdentifier(input) {
 
   const shortMatch = trimmed.match(/^([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)$/);
   if (shortMatch) {
-    return { owner: shortMatch[1], repo: shortMatch[2].replace(/\.git$/, '') };
+    const owner = shortMatch[1];
+    const repo = shortMatch[2].replace(/\.git$/, '');
+    if (owner.startsWith('.') || repo.startsWith('.')) {
+      return null;
+    }
+    return { owner, repo };
   }
 
   try {
@@ -87,10 +92,13 @@ function parseRepoIdentifier(input) {
       return null;
     }
 
-    return {
-      owner: parts[0],
-      repo: parts[1].replace(/\.git$/, '')
-    };
+    const owner = parts[0];
+    const repo = parts[1].replace(/\.git$/, '');
+    if (owner.startsWith('.') || repo.startsWith('.')) {
+      return null;
+    }
+
+    return { owner, repo };
   } catch {
     return null;
   }
@@ -147,11 +155,11 @@ function sanitizeGitRef(ref) {
   }
 
   const trimmedRef = ref.trim();
-  const isValidPattern = /^([A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(trimmedRef);
+  const isValidPattern = /^([A-Za-z0-9_.-]+\/)*[A-Za-z0-9_.-]+$/.test(trimmedRef);
   const hasTraversal = trimmedRef.includes('..');
 
   if (!trimmedRef || trimmedRef.startsWith('/') || trimmedRef.endsWith('/') || hasTraversal || !isValidPattern) {
-    throw new Error('Invalid ref. Use only alphanumeric, underscore, hyphen and slash.');
+    throw new Error('Invalid ref. Use only alphanumeric, dot, underscore, hyphen and slash.');
   }
 
   return trimmedRef;
@@ -237,6 +245,9 @@ const server = createServer(async (req, res) => {
     try {
       const rawBody = await collectBody(req);
       const body = rawBody ? JSON.parse(rawBody) : {};
+      if (!body.repo && !body.githubRepo) {
+        throw new Error('Missing required field: repo or githubRepo');
+      }
       const discovered = await discoverDiploiConfig(body.repo ?? body.githubRepo, body.ref);
 
       lastDiscoveredConfig.repo = `${discovered.owner}/${discovered.repo}`;
