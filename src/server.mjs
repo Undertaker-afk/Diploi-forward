@@ -4,6 +4,7 @@ import { parse as parseYaml } from 'yaml';
 const PORT = Number.parseInt(process.env.PORT ?? '3000', 10);
 const TOKEN = process.env.DIPLOI_AI_TOKEN;
 const BASE_URL = process.env.DIPLOI_AI_API_BASE_URL;
+const MAX_PAYLOAD_SIZE_BYTES = 1024 * 1024;
 
 if (!TOKEN || !BASE_URL) {
   console.error('Missing required env vars: DIPLOI_AI_TOKEN and DIPLOI_AI_API_BASE_URL');
@@ -53,7 +54,7 @@ function collectBody(req) {
     req.setEncoding('utf8');
     req.on('data', (chunk) => {
       body += chunk;
-      if (body.length > 1024 * 1024) {
+      if (body.length > MAX_PAYLOAD_SIZE_BYTES) {
         reject(new Error('Payload too large'));
         req.destroy();
       }
@@ -160,7 +161,9 @@ async function discoverDiploiConfig(repoInput, explicitRef) {
       const yamlText = await response.text();
       const parsedYaml = parseYaml(yamlText);
       const models = Array.isArray(parsedYaml?.models) ? parsedYaml.models : [];
-      const providers = [...new Set(models.map((model) => model?.provider).filter(Boolean))];
+      const providerValues = models.map((model) => model?.provider).filter(Boolean);
+      const uniqueProviders = new Set(providerValues);
+      const providers = [...uniqueProviders];
 
       return {
         owner: parsed.owner,
@@ -174,7 +177,7 @@ async function discoverDiploiConfig(repoInput, explicitRef) {
           provider: model?.provider ?? null,
           model: model?.model ?? null,
           apiBase: model?.apiBase ?? null,
-          apiKey: model?.apiKey ? 'configured' : null
+          apiKey: model?.apiKey ? 'configured' : 'not_configured'
         }))
       };
     }
