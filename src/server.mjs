@@ -141,18 +141,38 @@ function shouldProxy(pathname) {
   return pathname.startsWith('/v1/') || pathname.startsWith('/openai/v1/') || pathname.startsWith('/anthropic/v1/');
 }
 
+function sanitizeGitRef(ref) {
+  if (typeof ref !== 'string') {
+    throw new Error('Invalid ref format.');
+  }
+
+  const trimmedRef = ref.trim();
+  const isValidPattern = /^[A-Za-z0-9._/-]+$/.test(trimmedRef);
+  const hasTraversal = trimmedRef.includes('..');
+
+  if (!trimmedRef || trimmedRef.startsWith('/') || trimmedRef.endsWith('/') || hasTraversal || !isValidPattern) {
+    throw new Error('Invalid ref. Use only alphanumeric, dot, underscore, hyphen and slash.');
+  }
+
+  return trimmedRef;
+}
+
 async function discoverDiploiConfig(repoInput, explicitRef) {
   const parsed = parseRepoIdentifier(repoInput);
   if (!parsed) {
     throw new Error('Invalid repo format. Use "owner/repo" or "https://github.com/owner/repo".');
   }
 
-  const refsToTry = explicitRef ? [explicitRef] : ['main', 'master'];
+  const refsToTry = explicitRef ? [sanitizeGitRef(explicitRef)] : ['main', 'master'];
   const pathsToTry = ['diploi.yaml', 'diploi.yml', '.diploi/diploi.yaml', '.diploi/diploi.yml'];
 
   for (const ref of refsToTry) {
     for (const configPath of pathsToTry) {
-      const rawUrl = `https://raw.githubusercontent.com/${parsed.owner}/${parsed.repo}/${ref}/${configPath}`;
+      const encodedRef = ref
+        .split('/')
+        .map((segment) => encodeURIComponent(segment))
+        .join('/');
+      const rawUrl = `https://raw.githubusercontent.com/${parsed.owner}/${parsed.repo}/${encodedRef}/${configPath}`;
       const response = await fetch(rawUrl);
       if (!response.ok) {
         continue;
