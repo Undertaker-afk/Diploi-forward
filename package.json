@@ -1,0 +1,23 @@
+{
+  "name": "diploi-forward",
+  "version": "1.0.0",
+  "description": "Expose Diploi internal AI proxy as internet-facing OpenAI/Anthropic-compatible endpoints",
+  "type": "module",
+  "main": "src/server.mjs",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node --watch src/server.mjs",
+    "test": "node --test"
+  },
+  "keywords": [
+    "diploi",
+    "proxy",
+    "openai",
+    "anthropic"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "yaml": "2.8.4"
+  }
+}
